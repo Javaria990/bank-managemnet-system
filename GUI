@@ -1,0 +1,1242 @@
+package OKAY;
+import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.plaf.IconUIResource;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+
+class GUI {
+    int chance;
+    static Person global_person = new Person();
+    static Client global_client = new Client();
+    static Account global_accounts = new Account();
+    GUI() throws IOException, ClassNotFoundException {
+        chance = 3;
+        screen();
+    }
+
+    void screen(){
+        JFrame frame = new JFrame("Image Frame");
+        Button n = new Button();
+        frame.setLayout(null);
+        Icon icm = new ImageIcon("C:\\Users\\hp\\IdeaProjects\\try\\src\\OKAY\\Group 3 (2).png");
+        JButton button7 = new JButton(icm);
+        button7.setBounds(30,310,143,53);
+        frame.add(button7);
+
+//        JButton addBtn = new JButton("+"); addBtn. setBounds(150, 540, 30, 25); addBtn.setBorder(new RoundedBorder(10));
+//        Icon ioc = new ImageIcon("C:\\Users\\hp\\IdeaProjects\\try\\src\\OKAY\\Group 1000000698.png");
+//        JButton button5 = new JButton(ioc);
+//        button5.setBounds(375,34,70,23);
+//        frame.add(button5);
+//
+//        Icon iocm = new ImageIcon("C:\\Users\\hp\\IdeaProjects\\try\\src\\OKAY\\Group 1000000697.png");
+//        JButton button9 = new JButton(iocm);
+//        button9.setBounds(472,34,70,23);
+//        frame.add(button9);
+//
+//        Icon i = new ImageIcon("C:\\Users\\hp\\IdeaProjects\\try\\src\\OKAY\\Group 1000000696.png");
+//        JButton button10 = new JButton(i);
+//        button10.setBounds(567,34,70,24);
+//        frame.add(button10);
+//
+        ImageIcon imageIcon = new ImageIcon("C:\\Users\\hp\\IdeaProjects\\try\\src\\OKAY\\Group 1000000695.png");
+        JLabel imageLabel = new JLabel(imageIcon);
+//
+        imageLabel.setBounds(0, 0, imageIcon.getIconWidth(), 560);
+        frame.getContentPane().add(imageLabel);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(800, 600);
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+
+        button7.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.dispose();
+                first();
+
+            }
+        });
+    }
+    void first(){
+        JFrame frame = new JFrame("Image Frame");
+        ImageIcon imageIcon = new ImageIcon("C:\\Users\\hp\\IdeaProjects\\try\\src\\OKAY\\Group 1000000699 (1).png");
+        JLabel imageLabel = new JLabel(imageIcon);
+        frame.setLayout(null);
+        imageLabel.setBounds(0, 0, imageIcon.getIconWidth(), 560);
+        frame.getContentPane().add(imageLabel);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(800, 600);
+        Icon i = new ImageIcon("C:\\Users\\hp\\IdeaProjects\\try\\src\\OKAY\\Frame 10 (1).png");
+        JButton button10 = new JButton(i);
+        button10.setBounds(234, 445,332,55);
+        frame.add(button10);
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+        button10.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.dispose();
+                second();
+            }
+        });
+    }
+
+    void createAndShowGUI() {
+        JFrame frame = new JFrame("Bank Feedback Form");
+        frame.setSize(400, 200);
+        frame.setLayout(null);
+        Color n = new Color(35, 54, 86);
+        frame.setForeground(n);
+
+        JLabel overallLabel = new JLabel("1. Overall Rating (1-5):");
+        overallLabel.setBounds(10, 10, 150, 20);
+        frame.add(overallLabel);
+
+        JRadioButton[] ratingButtons = new JRadioButton[5];
+        ButtonGroup ratingGroup = new ButtonGroup();
+
+        for (int i = 0; i < 5; i++) {
+            ratingButtons[i] = new JRadioButton(String.valueOf(i + 1));
+            ratingButtons[i].setBounds(160 + i * 40, 10, 40, 20);
+            ratingButtons[i].setForeground(Color.BLUE);
+            ratingGroup.add(ratingButtons[i]);
+            frame.add(ratingButtons[i]);
+        }
+
+        JLabel likedLabel = new JLabel("2. What did you like the most?");
+        likedLabel.setBounds(10, 40, 200, 20);
+        frame.add(likedLabel);
+
+        JTextField likedServicesField = new JTextField();
+        likedServicesField.setBounds(220, 40, 150, 20);
+        frame.add(likedServicesField);
+
+        JLabel improveLabel = new JLabel("3. Areas to improve:");
+        improveLabel.setBounds(10, 70, 200, 20);
+        frame.add(improveLabel);
+
+        JTextField areasToImproveField = new JTextField();
+        areasToImproveField.setBounds(220, 70, 150, 20);
+        frame.add(areasToImproveField);
+
+        JButton submitButton = new JButton("Submit Feedback");
+        submitButton.setBounds(160, 100, 150, 30);
+        submitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String overallRating = getSelectedRating(ratingButtons);
+                String likedServices = likedServicesField.getText();
+                String areasToImprove = areasToImproveField.getText();
+
+                saveFeedbackToFile(overallRating, likedServices, areasToImprove);
+                JOptionPane.showMessageDialog(frame,
+                        "Thank you for your feedback! Your feedback has been saved to " + "feedback.txt",
+                        "Feedback Submitted", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+        frame.add(submitButton);
+
+        frame.setVisible(true);
+    }
+
+    private static String getSelectedRating(JRadioButton[] buttons) {
+        for (JRadioButton button : buttons) {
+            if (button.isSelected()) {
+                return button.getText();
+            }
+        }
+        return null;
+    }
+
+    void saveFeedbackToFile(String overallRating, String likedServices, String areasToImprove) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("C:\\Users\\hp\\IdeaProjects\\try\\feedback.txt", true))) {
+            writer.write("Overall Rating: " + overallRating + "\n");
+            writer.write("Liked the most: " + likedServices + "\n");
+            writer.write("Areas to improve: " + areasToImprove + "\n");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    void second(){
+        JFrame frame = new JFrame("Image Frame");
+        ImageIcon imageIcon = new ImageIcon("C:\\Users\\hp\\IdeaProjects\\try\\src\\OKAY\\Group 1000000700 (1).png");
+        JLabel imageLabel = new JLabel(imageIcon);
+        frame.setLayout(null);
+        imageLabel.setBounds(0, 0, imageIcon.getIconWidth(), 560);
+        frame.getContentPane().add(imageLabel);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(800, 600);
+        Icon i = new ImageIcon("C:\\Users\\hp\\IdeaProjects\\try\\src\\OKAY\\Frame 10 (1).png");
+        JButton button10 = new JButton(i);
+        button10.setBounds(234,445,332,55);
+        frame.add(button10);
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+        button10.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.dispose();
+                try {
+                    createMainMenu();
+                } catch (IOException | ClassNotFoundException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
+    }
+
+    void createMainMenu() throws IOException, ClassNotFoundException {
+        global_person.file_to_arraylist();
+        global_client.file_to_arraylist();
+        global_accounts.file_to_arraylist();
+        JFrame frame12 = new JFrame();
+        frame12.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame12.setBounds(140,70,800, 600);
+        frame12.setResizable(false);
+        frame12.setLayout(null);
+        frame12.setVisible(true);
+        Container container = frame12.getContentPane();
+        container.setLayout(null);
+        ImageIcon imag = new ImageIcon("C:\\Users\\hp\\IdeaProjects\\try\\src\\OKAY\\Group 1000000702 (1).png");
+        JLabel imageLabel = new JLabel(imag);
+        imageLabel.setBounds(0,0,800,599);
+        container.add(imageLabel);
+        Icon m = new ImageIcon("C:\\Users\\hp\\IdeaProjects\\try\\src\\OKAY\\Group 1000000702.png");
+        JButton personButton = new JButton(m);
+        Icon mm = new ImageIcon("C:\\Users\\hp\\IdeaProjects\\try\\src\\OKAY\\Group 1000000708.png");
+        JButton clientButton = new JButton(mm);
+        Icon mmi = new ImageIcon("C:\\Users\\hp\\IdeaProjects\\try\\src\\OKAY\\Group 1000000704.png");
+        JButton accountButton = new JButton(mmi);
+        Icon km = new ImageIcon("C:\\Users\\hp\\IdeaProjects\\try\\src\\OKAY\\Group 1000000705.png");
+        JButton feedback = new JButton(km);
+        Icon mmm = new ImageIcon("C:\\Users\\hp\\IdeaProjects\\try\\src\\OKAY\\Group 1000000706.png");
+        JButton adminButton = new JButton(mmm);
+        Icon h = new ImageIcon("C:\\Users\\hp\\IdeaProjects\\try\\src\\OKAY\\Group 1000000707.png");
+        JButton exitButton = new JButton(h);
+
+        personButton.setBounds(495, 259, 150, 36);
+        clientButton.setBounds(621, 309, 150, 36);
+        accountButton.setBounds(493, 361, 150, 36);
+        feedback.setBounds(493, 469, 150, 36);
+        adminButton.setBounds(621, 418, 150, 36);
+        exitButton.setBounds(620, 521, 150, 36);
+
+        container.add(personButton);
+        container.add(clientButton);
+        container.add(accountButton);
+        container.add(adminButton);
+        container.add(feedback);
+        container.add(exitButton);
+
+        personButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame12.setVisible(false);
+                person();
+            }
+        });
+
+        clientButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame12.setVisible(false);
+                client();
+            }
+        });
+
+        accountButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame12.setVisible(false);
+                account();
+            }
+        });
+
+        adminButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                login();
+            }
+        });
+
+        feedback.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame12.setVisible(false);
+                createAndShowGUI();
+
+            }
+        });
+
+        exitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame12.dispose();
+                try {
+                    thanks();
+                } catch (InterruptedException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
+    }
+    public boolean checkLogin(String enteredPassword) {
+        return enteredPassword.equals("bia419352@Abc");
+    }
+
+
+    void thanks() throws InterruptedException {
+        JFrame frame = new JFrame();
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(800, 600);
+        frame.setResizable(false);
+
+        Container container = frame.getContentPane();
+        container.setLayout(null);
+
+        ImageIcon imag;
+        try {
+            imag = new ImageIcon("src/OKAY/Group 1000000898.png");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+
+        JLabel imageLabel = new JLabel(imag);
+        imageLabel.setBounds(0, 0, 800, 599);
+        container.add(imageLabel);
+
+        frame.setVisible(true);
+    }
+
+    void login(){
+        JFrame frame1 = new JFrame();
+        frame1.setBounds(150, 150, 300, 300);
+        frame1.setResizable(false);
+        frame1.setTitle("Start Page");
+
+        Container c = frame1.getContentPane();
+        c.setLayout(null);
+
+        JLabel label1 = new JLabel("       Preview      Look and Feel");
+        Font f = new Font("Arial", Font.PLAIN, 15);
+        label1.setFont(f);
+        label1.setOpaque(true);
+        label1.setBackground(Color.white);
+        label1.setBounds(0, 0, 300, 30);
+        Border border = BorderFactory.createLineBorder(Color.lightGray,2);
+        label1.setBorder(border);
+        c.add(label1);
+
+        JLabel label2 = new JLabel("UserName ");
+        label2.setBounds(30, 50, 80, 30);
+        c.add(label2);
+
+        JTextField t1=new JTextField();
+        t1.setBounds(100,55,150,20);
+        c.add(t1);
+        Font f1=new Font("Arial",Font.PLAIN,15);
+        t1.setFont(f1);
+
+        JLabel label3 = new JLabel("Password ");
+        label3.setBounds(30, 80, 80, 30);
+        c.add(label3);
+
+        JPasswordField t2=new JPasswordField();
+        t2.setBounds(100,85,150,20);
+        c.add(t2);
+        t2.setFont(f1);
+        t2.setEchoChar('#');
+
+
+        JButton btn1 = new JButton("OK");
+        btn1.setBounds(50, 150, 80, 23);
+        Color n = new Color(160, 160, 231);
+        btn1.setBackground(n);
+        c.add(btn1);
+
+        JButton btn2 = new JButton("Cancel");
+        btn2.setBounds(150, 150, 80, 23);
+        btn2.setBackground(n);
+        c.add(btn2);
+
+        btn1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String name = t1.getText();
+                String pass = new String(t2.getPassword());
+                if (checkLogin(pass)) {
+                    JOptionPane.showMessageDialog(frame1, "Login successful!");
+                    frame1.dispose();
+                    createAdminMenu();
+                } else {
+                    JOptionPane.showMessageDialog(frame1, "Incorrect username or password. Try again.");
+
+                }
+            }
+        });
+        btn2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame1.setVisible(false);
+                try {
+                    createMainMenu();
+                } catch (IOException | ClassNotFoundException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
+
+        frame1.setVisible(true);
+    }
+        void person() {
+            JFrame frame = new JFrame();
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setSize(800, 600);
+            frame.setResizable(false);
+            frame.setLayout(null);
+            frame.setVisible(true);
+
+            Container container = frame.getContentPane();
+            container.setLayout(null);
+
+            ImageIcon imag = new ImageIcon("C:\\Users\\hp\\IdeaProjects\\try\\src\\OKAY\\Group 1000000704 (2).png");
+            JLabel imageLabel = new JLabel(imag);
+            imageLabel.setBounds(0,0,800,599);
+            container.add(imageLabel);
+
+            Icon g = new ImageIcon("C:\\Users\\hp\\IdeaProjects\\try\\src\\OKAY\\Group 1000000705 (1).png");
+            JButton registerButton = new JButton(g);
+            Icon gm = new ImageIcon("C:\\Users\\hp\\IdeaProjects\\try\\src\\OKAY\\Group 1000000706 (1).png");
+            JButton deleteButton = new JButton(gm);
+            Icon gmi = new ImageIcon("C:\\Users\\hp\\IdeaProjects\\try\\src\\OKAY\\Group 1000000707 (1).png");
+            JButton allPersonsButton = new JButton(gmi);
+            Icon gmin = new ImageIcon("C:\\Users\\hp\\IdeaProjects\\try\\src\\OKAY\\Group 1000000708 (1).png");
+            JButton exitButton = new JButton(gmin);
+            registerButton.setBounds(459, 267, 267, 32);
+            deleteButton.setBounds(459, 315, 267, 32);
+            allPersonsButton.setBounds(459, 365, 267, 32);
+            exitButton.setBounds(459, 412, 267, 32);
+
+            registerButton.addActionListener(new ActionListener() {
+@Override
+public void actionPerformed(ActionEvent e) {
+        JFrame frame1 = new JFrame("Registration Form");
+        frame1.setSize(400, 250);
+        frame1.setResizable(false);
+        frame1.setLayout(null);
+        frame1.setVisible(true);
+
+        Container container1 = frame1.getContentPane();
+        Color mm = new Color(0x06013D);
+    JLabel m = new JLabel("Register as a person form");
+    m.setBounds(10,10,170,30);
+    m.setForeground(mm);
+        container1.add(m);
+        container1.setLayout(null);
+
+        JTextField nameField = new JTextField();
+        nameField.setBounds(100, 40, 120, 25);
+        JTextField emailField = new JTextField();
+        emailField.setBounds(100, 70, 120, 25);
+        JTextField cnicField = new JTextField();
+        cnicField.setBounds(100, 102, 120, 25);
+        JTextField phoneField = new JTextField();
+        phoneField.setBounds(100, 136, 120, 25);
+        JLabel k = new JLabel("Name:");
+        k.setBounds(20, 40, 80, 30);
+        JLabel r = new JLabel("Email:");
+        r.setBounds(20, 70, 80, 30);
+        JLabel t = new JLabel("CNIC:");
+        t.setBounds(20, 102, 80, 30);
+        JLabel tn = new JLabel("Phone Number:");
+        tn.setBounds(20, 136, 170, 30);
+
+        container1.add(k);
+        container1.add(nameField);
+        container1.add(r);
+        container1.add(emailField);
+        container1.add(t);
+        container1.add(cnicField);
+        container1.add(tn);
+        container1.add(phoneField);
+        JButton okButton = new JButton("OK");
+        okButton.setBounds(40, 165, 70, 25);
+        okButton.addActionListener(new ActionListener() {
+@Override
+public void actionPerformed(ActionEvent e) {
+        frame1.dispose();
+        String name = nameField.getText();
+        String email = emailField.getText();
+        String cnic = cnicField.getText();
+        String phone = phoneField.getText();
+
+        System.out.println("Name: " + name);
+        System.out.println("Email: " + email);
+        System.out.println("CNIC: " + cnic);
+        System.out.println("Phone Number: " + phone);
+        Person sv = new Person();
+        sv = global_person.search_person(cnic);
+        if (sv != null) {
+        JOptionPane.showMessageDialog(frame1, "Already Registered");
+        } else {
+        Person obj = new Person(name, phone, cnic, email);
+        try {
+        global_person.add_person(obj);
+        } catch (IOException | ClassNotFoundException ex) {
+        throw new RuntimeException(ex);
+        }
+        try {
+        global_person.add_to_file();
+        } catch (IOException ex) {
+        throw new RuntimeException(ex);
+        }
+        JOptionPane.showMessageDialog(frame1, "Person registered successfully");
+        }
+        }
+        });
+
+        JButton exitButton1 = new JButton("Exit");
+        exitButton1.setForeground(Color.pink);
+        exitButton1.setBounds(120, 165, 70, 25);
+        exitButton1.addActionListener(new ActionListener() {
+@Override
+public void actionPerformed(ActionEvent e) {
+        frame1.dispose();
+        }
+        });
+
+        container1.add(okButton);
+        container1.add(exitButton1);
+        }
+        });
+
+        deleteButton.addActionListener(new ActionListener() {
+@Override
+public void actionPerformed(ActionEvent e) {
+        String cnicToDelete = JOptionPane.showInputDialog(frame, "Enter the CNIC of the person you want to delete:");
+
+        if (cnicToDelete != null && !cnicToDelete.isEmpty()) {
+        Person personToDelete = global_person.search_person(cnicToDelete);
+
+        if (personToDelete != null) {
+        int choice = JOptionPane.showConfirmDialog(frame, "Are you sure you want to delete this person?", "Confirmation", JOptionPane.YES_NO_OPTION);
+
+        if (choice == JOptionPane.YES_OPTION) {
+        try {
+        global_person.remove_person(personToDelete);
+        } catch (IOException | ClassNotFoundException ex) {
+        throw new RuntimeException(ex);
+        }
+        Client relatedClient = global_client.search_clients(cnicToDelete);
+
+        if (relatedClient != null) {
+        try {
+        global_client.delete_client(relatedClient);
+        } catch (IOException | ClassNotFoundException ex) {
+        throw new RuntimeException(ex);
+        }
+        ArrayList<Account> relatedAccounts = global_accounts.account_(cnicToDelete);
+
+        for (Account account : relatedAccounts) {
+        try {
+        global_accounts.delete_account(account);
+        } catch (IOException | ClassNotFoundException ex) {
+        throw new RuntimeException(ex);
+        }
+        }
+
+        if (!((ArrayList<?>) relatedAccounts).isEmpty()) {
+        JOptionPane.showMessageDialog(frame, "Person and related accounts deleted successfully");
+        } else {
+        JOptionPane.showMessageDialog(frame, "Person deleted successfully");
+        }
+        } else {
+        JOptionPane.showMessageDialog(frame, "Person deleted successfully");
+        }
+        } else {
+        JOptionPane.showMessageDialog(frame, "Deletion canceled");
+        }
+        } else {
+        JOptionPane.showMessageDialog(frame, "Person not found");
+        }
+        } else {
+        JOptionPane.showMessageDialog(frame, "Invalid CNIC. Deletion canceled");
+        }
+        }
+        });
+
+
+        allPersonsButton.addActionListener(new ActionListener() {
+@Override
+public void actionPerformed(ActionEvent e) {
+        global_person.show_person();
+        }
+        });
+
+
+
+        exitButton.addActionListener(new ActionListener() {
+@Override
+public void actionPerformed(ActionEvent e) {
+        frame.dispose();
+        try {
+        createMainMenu();
+        } catch (IOException | ClassNotFoundException ex) {
+        throw new RuntimeException(ex);}}
+        });
+
+        container.add(registerButton);
+        container.add(deleteButton);
+        container.add(allPersonsButton);
+        container.add(exitButton);
+        }
+
+        void client() {
+        JFrame frame = new JFrame();
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(800, 600);
+        frame.setResizable(false);
+        frame.setLayout(null);
+        frame.setVisible(true);
+
+        Container container = frame.getContentPane();
+        container.setLayout(null);
+        Icon o = new ImageIcon("C:\\Users\\hp\\IdeaProjects\\try\\src\\OKAY\\Group 1000000713 (1).png");
+        JLabel imageLabel = new JLabel(o);
+        imageLabel.setBounds(0,0,800,599);
+        container.add(imageLabel);
+        Icon j = new ImageIcon("C:\\Users\\hp\\IdeaProjects\\try\\src\\OKAY\\Group 1000000705 (2).png") ;
+        JButton registerButton = new JButton(j);
+        Icon p = new ImageIcon("C:\\Users\\hp\\IdeaProjects\\try\\src\\OKAY\\Group 1000000706 (2).png");
+        JButton deleteButton = new JButton(p);
+        Icon b = new ImageIcon("C:\\Users\\hp\\IdeaProjects\\try\\src\\OKAY\\Group 1000000711.png");
+        JButton addAccountButton = new JButton(b);
+        Icon k = new ImageIcon("C:\\Users\\hp\\IdeaProjects\\try\\src\\OKAY\\Group 1000000710.png");
+        JButton allClientsButton = new JButton(k);
+        Icon uu = new ImageIcon("C:\\Users\\hp\\IdeaProjects\\try\\src\\OKAY\\Group 1000000708 (2).png");
+        JButton totalAmountButton = new JButton(uu);
+        Icon ol = new ImageIcon("C:\\Users\\hp\\IdeaProjects\\try\\src\\OKAY\\Group 1000000707 (3).png");
+        JButton clientDetailsButton = new JButton(ol);
+        Icon h = new ImageIcon("C:\\Users\\hp\\IdeaProjects\\try\\src\\OKAY\\Group 1000000712.png");
+        JButton exitButton = new JButton(h);
+        registerButton.setBounds(25, 344, 190, 40);
+        deleteButton.setBounds(295, 344, 190, 40);
+        addAccountButton.setBounds(24, 420, 190, 40);
+        allClientsButton.setBounds(295, 420, 190, 40);
+        totalAmountButton.setBounds(558, 420, 190, 40);
+        clientDetailsButton.setBounds(295, 496, 190, 40);
+        exitButton.setBounds(558, 496, 190, 40);
+
+        registerButton.addActionListener(new ActionListener() {
+@Override
+public void actionPerformed(ActionEvent e) {
+        JFrame frame1 = new JFrame("Client Registration Form");
+        frame1.setSize(400, 250);
+        frame1.setResizable(false);
+        frame1.setLayout(null);
+        frame1.setVisible(true);
+
+        Container container1 = frame1.getContentPane();
+        container1.add(new JLabel("Register as a client form"));
+        container1.setLayout(null);
+
+        JTextField clientCnicField = new JTextField();
+        clientCnicField.setBounds(100, 60, 120, 25);
+        JLabel labelClientCnic = new JLabel("Client CNIC:");
+        labelClientCnic.setBounds(20, 60, 80, 30);
+
+        container1.add(labelClientCnic);
+        container1.add(clientCnicField);
+
+        JButton okButton = new JButton("OK");
+        okButton.setBounds(40, 125, 60, 30);
+        okButton.setBackground(Color.PINK);
+        okButton.addActionListener(new ActionListener() {
+@Override
+public void actionPerformed(ActionEvent e) {
+        String clientCnic = clientCnicField.getText();
+        Client.ID = Client.ht.size();
+        Person searchedPerson = global_person.search_person(clientCnic);
+        if (searchedPerson != null) {
+        Client existingClient = global_client.search_clients(clientCnic);
+        if (existingClient != null) {
+        JOptionPane.showMessageDialog(frame1, "This Person is already registered as a client with ID: " + existingClient.client_ID);
+        } else {
+        Client newClient = new Client(searchedPerson);
+        global_client.add_client(newClient);
+        try {
+        global_client.add_to_file();
+        } catch (IOException ex) {
+        throw new RuntimeException(ex);
+        }
+        JOptionPane.showMessageDialog(frame1, "Client added successfully with ID: " + newClient.client_ID);
+        }
+        } else {
+        JOptionPane.showMessageDialog(frame1, "Person Not found");
+        }
+        }
+        });
+        JButton exitButton1 = new JButton("Exit");
+        exitButton1.setBounds(140, 125, 60, 30);
+        exitButton1.setBackground(Color.PINK);
+        exitButton1.addActionListener(new ActionListener() {
+@Override
+public void actionPerformed(ActionEvent e) {
+        frame1.dispose();
+        }
+        });
+
+        container1.add(okButton);
+        container1.add(exitButton1);
+        }
+        });
+        deleteButton.addActionListener(new ActionListener() {
+@Override
+public void actionPerformed(ActionEvent e) {
+        String clientIDToDelete = JOptionPane.showInputDialog(frame, "Enter the Client ID of the client you want to delete:");
+
+        if (clientIDToDelete != null && !clientIDToDelete.isEmpty()) {
+        Client clientToDelete = global_client.search_client(clientIDToDelete);
+
+        if (clientToDelete != null) {
+        int choice = JOptionPane.showConfirmDialog(frame, "Are you sure you want to delete this client?", "Confirmation", JOptionPane.YES_NO_OPTION);
+
+        if (choice == JOptionPane.YES_OPTION) {
+        try {
+        global_client.delete_client(clientToDelete);
+        } catch (IOException | ClassNotFoundException ex) {
+        throw new RuntimeException(ex);
+        }
+
+        ArrayList<Account> relatedAccounts = global_accounts.account_cli_id(clientIDToDelete);
+
+        for (Account account : relatedAccounts) {
+        try {
+        global_accounts.delete_account(account);
+        } catch (IOException | ClassNotFoundException ex) {
+        throw new RuntimeException(ex);
+        }
+        }
+
+        if (!relatedAccounts.isEmpty()) {
+        JOptionPane.showMessageDialog(frame, "Client and related accounts deleted successfully");
+        } else {
+        JOptionPane.showMessageDialog(frame, "Client deleted successfully");
+        }
+        } else {
+        JOptionPane.showMessageDialog(frame, "Deletion canceled");
+        }
+        } else {
+        JOptionPane.showMessageDialog(frame, "Client not found");
+        }
+        } else {
+        JOptionPane.showMessageDialog(frame, "Invalid Client ID. Deletion canceled");
+        }
+        }
+        });
+
+        addAccountButton.addActionListener(new ActionListener() {
+@Override
+public void actionPerformed(ActionEvent e) {
+        String clientIdToAddAccount = JOptionPane.showInputDialog(frame, "Enter the Client ID to add an account:");
+
+        if (clientIdToAddAccount != null && !clientIdToAddAccount.isEmpty()) {
+        Client clientToAddAccount = global_client.search_client(clientIdToAddAccount);
+
+        if (clientToAddAccount != null) {
+        String startingAmountInput = JOptionPane.showInputDialog(frame, "Enter the starting amount for the account:");
+
+        try {
+        float startingAmount = Float.parseFloat(startingAmountInput);
+
+        if (startingAmount >= 0) {
+        Account newAccount = new Account(clientToAddAccount, startingAmount);
+
+        try {
+        global_accounts.add_account(newAccount);
+        JOptionPane.showMessageDialog(frame, "Account added successfully");
+        } catch (IOException | ClassNotFoundException ex) {
+        throw new RuntimeException(ex);
+        }
+        } else {
+        JOptionPane.showMessageDialog(frame, "Invalid starting amount. Please enter a non-negative number.");
+        }
+        } catch (NumberFormatException ex) {
+        JOptionPane.showMessageDialog(frame, "Invalid input for starting amount. Please enter a valid number.");
+        }
+        } else {
+        JOptionPane.showMessageDialog(frame, "Invalid Client ID. Please enter a valid ID.");
+        }
+        } else {
+        JOptionPane.showMessageDialog(frame, "Invalid Client ID. Account addition canceled.");
+        }
+        }
+        });
+        allClientsButton.addActionListener(new ActionListener() {
+@Override
+public void actionPerformed(ActionEvent e) {
+        Client p = new Client();
+        p.show_clients();
+        }
+        });
+
+
+        totalAmountButton.addActionListener(new ActionListener() {
+@Override
+public void actionPerformed(ActionEvent e) {
+        String clientIDForTotalAmount = JOptionPane.showInputDialog(frame, "Enter the Client ID to check the total amount:");
+        if (clientIDForTotalAmount != null && !clientIDForTotalAmount.isEmpty()) {
+        Client clientForTotalAmount = global_client.search_client(clientIDForTotalAmount);
+
+        if (clientForTotalAmount != null) {
+        ArrayList<Float> accountAmounts = global_accounts.amnt_det(clientIDForTotalAmount);
+
+        if (!accountAmounts.isEmpty()) {
+        float totalAmount = 0;
+        for (Float amount : accountAmounts) {
+        totalAmount += amount;
+        }
+        JFrame detailsFrame = new JFrame("Client Details");
+        detailsFrame.setEnabled(false);
+        detailsFrame.setSize(300, 200);
+        detailsFrame.setLayout(new BorderLayout());
+
+        JTextArea detailsTextArea = new JTextArea();
+        detailsTextArea.append("Name: " + clientForTotalAmount.na + "\n");
+        detailsTextArea.append("Total Amount: " + totalAmount);
+
+        detailsFrame.add(new JScrollPane(detailsTextArea), BorderLayout.CENTER);
+        detailsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        detailsFrame.setLocationRelativeTo(frame);
+        detailsFrame.setVisible(true);
+
+        System.out.println("\u001B[36m\u001B[1mThe total amount for Client " + clientIDForTotalAmount + " is: " + totalAmount + "\u001B[0m\u001B[0m");
+        } else {
+        JOptionPane.showMessageDialog(frame, "The user with Client ID " + clientIDForTotalAmount + " has no account.");
+        System.out.println("\u001B[34m\033[3mThe user with Client ID " + clientIDForTotalAmount + " has no account.\033[0m\u001B[0m");
+        }
+        } else {
+        JOptionPane.showMessageDialog(frame, "Client not found. Please enter a valid Client ID.");
+        }
+        } else {
+        JOptionPane.showMessageDialog(frame, "Invalid Client ID. Total amount check canceled.");
+        }
+        }
+        });
+        clientDetailsButton.addActionListener(new ActionListener() {
+@Override
+public void actionPerformed(ActionEvent e) {
+        String cnic = JOptionPane.showInputDialog(frame, "Enter the CNIC Number:");
+
+        if (cnic != null && !cnic.isEmpty()) {
+        Client client = global_client.search_clients(cnic);
+
+        if (client != null) {
+        String clientDetails = "Client Name: " + client.na + "\n"
+        + "Client ID: " + client.client_ID + "\n"
+        + "Client Number: " + client.num + "\n"
+        + "Client CNIC: " + client.c_ID;
+        ArrayList<String> accountIDs = global_accounts.account_det(cnic);
+        if (!accountIDs.isEmpty()) {
+        StringBuilder accountDetails = new StringBuilder("Associated Account IDs:\n");
+        for (String accountID : accountIDs) {
+        accountDetails.append(accountID).append("\n");
+        }
+        JOptionPane.showMessageDialog(frame, clientDetails + "\n\n" + accountDetails, "Client Details", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+        JOptionPane.showMessageDialog(frame, clientDetails + "\n\nThe user has no account.", "Client Details", JOptionPane.INFORMATION_MESSAGE);
+        }
+        } else {
+        JOptionPane.showMessageDialog(frame, "Client not found.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        } else {
+        JOptionPane.showMessageDialog(frame, "Search canceled or invalid CNIC input.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        }
+        });
+
+        exitButton.addActionListener(new ActionListener() {
+@Override
+public void actionPerformed(ActionEvent e) {
+        frame.dispose();
+        try {
+        createMainMenu();
+        } catch (IOException | ClassNotFoundException ex) {
+        throw new RuntimeException(ex);
+        }
+        }
+        });
+
+        container.add(registerButton);
+        container.add(deleteButton);
+        container.add(addAccountButton);
+        container.add(allClientsButton);
+        container.add(totalAmountButton);
+        container.add(clientDetailsButton);
+        container.add(exitButton);
+
+        }
+        void account(){
+        JFrame frame = new JFrame();
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(800, 600);
+        frame.setResizable(false);
+        frame.setLayout(null);
+        frame.setVisible(true);
+
+        Container container = frame.getContentPane();
+        container.setLayout(null);
+        ImageIcon imag = new ImageIcon("C:\\Users\\hp\\IdeaProjects\\try\\src\\OKAY\\Group 1000000892.png");
+        JLabel imageLabel = new JLabel(imag);
+        imageLabel.setBounds(0,0,800,599);
+        container.add(imageLabel);
+        Icon s = new ImageIcon("C:\\Users\\hp\\IdeaProjects\\try\\src\\OKAY\\Group 1000000885 (1).png");
+        JButton addAccountButton = new JButton(s);
+        Icon j = new ImageIcon("C:\\Users\\hp\\IdeaProjects\\try\\src\\OKAY\\Group 1000000886.png");
+        JButton depositMoneyButton = new JButton(j);
+        Icon g = new ImageIcon("C:\\Users\\hp\\IdeaProjects\\try\\src\\OKAY\\Group 1000000890.png");
+        JButton withdrawMoneyButton = new JButton(g);
+        Icon b= new ImageIcon("C:\\Users\\hp\\IdeaProjects\\try\\src\\OKAY\\Group 1000000891.png");
+        JButton searchAccountButton = new JButton(b);
+        Icon h = new ImageIcon("C:\\Users\\hp\\IdeaProjects\\try\\src\\OKAY\\Group 1000000888.png");
+        JButton delAccountButton = new JButton(h);
+        Icon mknm = new ImageIcon("C:\\Users\\hp\\IdeaProjects\\try\\src\\OKAY\\Group 1000000887.png");
+        JButton m =new JButton(mknm);
+        Icon pl = new ImageIcon("C:\\Users\\hp\\IdeaProjects\\try\\src\\OKAY\\Group 1000000889.png");
+        JButton returnBackButton = new JButton(pl);
+
+        addAccountButton.setBounds(42, 375, 150, 35);
+        depositMoneyButton.setBounds(227, 375, 150, 35);
+        withdrawMoneyButton.setBounds(412, 375, 150, 35);
+        searchAccountButton.setBounds(596, 375, 150, 35);
+        delAccountButton.setBounds(227, 430, 150, 35);
+        m.setBounds(42, 430, 150, 35);
+        container.add(m);
+        returnBackButton.setBounds(412, 430, 150, 35);
+        addAccountButton.addActionListener(new ActionListener() {
+@Override
+public void actionPerformed(ActionEvent e) {
+        String clientIdToAddAccount = JOptionPane.showInputDialog(frame, "Enter the Client ID to add an account:");
+        if (clientIdToAddAccount != null && !clientIdToAddAccount.isEmpty()) {
+        Client clientToAddAccount = global_client.search_client(clientIdToAddAccount);
+        if (clientToAddAccount != null) {
+        String startingAmountInput = JOptionPane.showInputDialog(frame, "Enter the starting amount for the account:");
+        try {
+        float startingAmount = Float.parseFloat(startingAmountInput);
+
+        if (startingAmount >= 0) {
+        Account newAccount = new Account(clientToAddAccount, startingAmount);
+        try {
+        global_accounts.add_account(newAccount);
+        JOptionPane.showMessageDialog(frame, "Account added successfully");
+        } catch (IOException | ClassNotFoundException ex) {
+        throw new RuntimeException(ex);
+        }
+        } else {
+        JOptionPane.showMessageDialog(frame, "Invalid starting amount. Please enter a non-negative number.");
+        }
+        } catch (NumberFormatException ex) {
+        JOptionPane.showMessageDialog(frame, "Invalid input for starting amount. Please enter a valid number.");
+        }
+        } else {
+        JOptionPane.showMessageDialog(frame, "Invalid Client ID. Please enter a valid ID.");
+        }
+        } else {
+        JOptionPane.showMessageDialog(frame, "Invalid Client ID. Account addition canceled.");
+        }
+        }
+        });
+        depositMoneyButton.addActionListener(new ActionListener() {
+@Override
+public void actionPerformed(ActionEvent e) {
+        String accountNumber = JOptionPane.showInputDialog(frame, "Enter the account number:");
+
+        if (accountNumber != null && !accountNumber.isEmpty()) {
+        Account account = global_accounts.search_account(accountNumber);
+
+        if (account != null) {
+        String amountString = JOptionPane.showInputDialog(frame, "Enter the amount:");
+
+        if (amountString != null && !amountString.isEmpty()) {
+        try {
+        float depositAmount = Float.parseFloat(amountString);
+        global_accounts.deposit_amount(accountNumber, depositAmount);
+        JOptionPane.showMessageDialog(frame, "Amount deposited successfully!");
+        } catch (NumberFormatException | IOException | ClassNotFoundException ex) {
+        JOptionPane.showMessageDialog(frame, "Invalid amount. Please enter a valid number.");
+        }
+        } else {
+        JOptionPane.showMessageDialog(frame, "Deposit canceled or invalid amount input.");
+        }
+        } else {
+        JOptionPane.showMessageDialog(frame, "Account not found.");
+        }
+        } else {
+        JOptionPane.showMessageDialog(frame, "Deposit canceled or invalid account number input.");
+        }
+        }
+        });
+
+        withdrawMoneyButton.addActionListener(new ActionListener() {
+@Override
+public void actionPerformed(ActionEvent e) {
+        String accountNumber = JOptionPane.showInputDialog(frame, "Enter the account number:");
+
+        if (accountNumber != null && !accountNumber.isEmpty()) {
+        Account account = global_accounts.search_account(accountNumber);
+
+        if (account != null) {
+        String amountString = JOptionPane.showInputDialog(frame, "Enter the amount to withdraw:");
+
+        if (amountString != null && !amountString.isEmpty()) {
+        try {
+        float withdrawAmount = Float.parseFloat(amountString);
+        global_accounts.withdraw_amount(accountNumber, withdrawAmount);
+        JOptionPane.showMessageDialog(frame, "Amount withdrawn successfully!");
+        } catch (NumberFormatException | IOException | ClassNotFoundException ex) {
+        JOptionPane.showMessageDialog(frame, "Invalid amount. Please enter a valid number.");
+        }
+        } else {
+        JOptionPane.showMessageDialog(frame, "Withdrawal canceled or invalid amount input.");
+        }
+        } else {
+        JOptionPane.showMessageDialog(frame, "Account not found.");
+        }
+        } else {
+        JOptionPane.showMessageDialog(frame, "Withdrawal canceled or invalid account number input.");
+        }
+        }
+        });
+
+        m.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(frame,"This service is currently not available!!");
+            }
+        });
+
+        searchAccountButton.addActionListener(new ActionListener() {
+@Override
+public void actionPerformed(ActionEvent e) {
+        String accountID = JOptionPane.showInputDialog(frame, "Enter the Account ID:");
+
+        if (accountID != null && !accountID.isEmpty()) {
+        Account account = global_accounts.search_account(accountID);
+
+        if (account != null) {
+        String accountDetails = "Account ID: " + account.acc_Id + "\n"
+        + "Name: " + account.na + "\n"
+        + "Client ID: " + account.cl_id + "\n"
+        + "Amount: " + account.amount+ "\n";
+        JOptionPane.showMessageDialog(frame, accountDetails, "Account Details", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+        JOptionPane.showMessageDialog(frame, "Account not found.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        } else {
+        JOptionPane.showMessageDialog(frame, "Search canceled or invalid Account ID input.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        }
+        });
+
+        delAccountButton.addActionListener(new ActionListener() {
+@Override
+public void actionPerformed(ActionEvent e) {
+        String del = JOptionPane.showInputDialog(frame, "Enter the Account ID to Delete an account:");
+        Account yellow;
+        yellow = global_accounts.search_account(del);
+        if (yellow != null) {
+        try {
+        global_accounts.delete_account(yellow);
+        } catch (IOException | ClassNotFoundException ex) {
+        throw new RuntimeException(ex);
+        }
+        JOptionPane.showMessageDialog(frame, "Account Deleted Successfully");
+        } else {
+        JOptionPane.showMessageDialog(frame, "Account not found");
+        }
+        }
+        });
+
+        returnBackButton.addActionListener(new ActionListener() {
+@Override
+public void actionPerformed(ActionEvent e) {
+    frame.dispose();
+        try {
+        createMainMenu();
+        } catch (IOException | ClassNotFoundException ex) {
+        throw new RuntimeException(ex);
+        }
+        }
+        });
+        container.add(addAccountButton);
+        container.add(depositMoneyButton);
+        container.add(withdrawMoneyButton);
+        container.add(searchAccountButton);
+        container.add(delAccountButton);
+        container.add(returnBackButton);
+        }
+
+
+        void createAdminMenu() {
+        JFrame frame = new JFrame();
+        frame.setSize(800, 600);
+        frame.setResizable(false);
+        frame.setLayout(null);
+        frame.setVisible(true);
+        Container container = frame.getContentPane();
+        container.setLayout(null);
+        Icon s = new ImageIcon("C:\\Users\\hp\\IdeaProjects\\try\\src\\OKAY\\Group 1000000897 (1).png");
+        JLabel imageLabel = new JLabel(s);
+        imageLabel.setBounds(0,0,800,599);
+        container.add(imageLabel);
+        Icon d= new ImageIcon("C:\\Users\\hp\\IdeaProjects\\try\\src\\OKAY\\Group 1000000895.png");
+        JButton allClientsButton = new JButton(d);
+        Icon f = new ImageIcon("C:\\Users\\hp\\IdeaProjects\\try\\src\\OKAY\\Group 1000000895 (1).png");
+        Icon nm = new ImageIcon("C:\\Users\\hp\\IdeaProjects\\try\\src\\OKAY\\Group 1000000896.png");
+        JButton allAccountsButton = new JButton(nm);
+        Icon nmk = new ImageIcon("C:\\Users\\hp\\IdeaProjects\\try\\src\\OKAY\\Group 1000000895 (3).png");
+        JButton bankMoneyButton = new JButton(nmk);
+        Icon u = new ImageIcon("C:\\Users\\hp\\IdeaProjects\\try\\src\\OKAY\\Group 1000000895 (1).png");
+        JButton removeClientButton = new JButton(u);
+        Icon v = new ImageIcon("C:\\Users\\hp\\IdeaProjects\\try\\src\\OKAY\\Group 1000000896 (1).png");
+        JButton customerDetailsButton = new JButton(v);
+        Icon b = new ImageIcon("C:\\Users\\hp\\IdeaProjects\\try\\src\\OKAY\\Group 1000000895 (2).png");
+        JButton returnBackButton = new JButton(b);
+
+        allClientsButton.setBounds(43, 103, 132, 35);
+        allAccountsButton.setBounds(43, 147, 132, 35);
+        removeClientButton.setBounds(45, 192, 132, 35);
+        bankMoneyButton.setBounds(43, 278, 132, 35);
+        customerDetailsButton.setBounds(43, 237, 132, 35);
+        returnBackButton.setBounds(43, 323, 132, 35);
+        allClientsButton.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+        global_client.show_clients();
+        }
+        });
+        allAccountsButton.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+        global_accounts.show_account();
+            }
+        });
+
+        bankMoneyButton.addActionListener(new ActionListener() {
+@Override
+public void actionPerformed(ActionEvent e) {
+    int totalAmount = global_accounts.totalAmount();
+    String totalAmountMessage = "Total Amount in Bank is: " + totalAmount;
+    JOptionPane.showMessageDialog(null, totalAmountMessage, "Bank Total Amount", JOptionPane.INFORMATION_MESSAGE);
+        }
+        });
+
+        removeClientButton.addActionListener(new ActionListener() {
+@Override
+public void actionPerformed(ActionEvent e) {
+        String clientIDToDelete = JOptionPane.showInputDialog(frame, "Enter the Client ID of the client you want to delete:");
+
+        if (clientIDToDelete != null && !clientIDToDelete.isEmpty()) {
+        Client clientToDelete = global_client.search_client(clientIDToDelete);
+
+        if (clientToDelete != null) {
+        int choice = JOptionPane.showConfirmDialog(frame, "Are you sure you want to delete this client?", "Confirmation", JOptionPane.YES_NO_OPTION);
+
+        if (choice == JOptionPane.YES_OPTION) {
+        try {
+        global_client.delete_client(clientToDelete);
+        } catch (IOException | ClassNotFoundException ex) {
+        throw new RuntimeException(ex);
+        }
+        ArrayList<Account> relatedAccounts = global_accounts.account_cli_id(clientIDToDelete);
+        for (Account account : relatedAccounts) {
+        try {
+        global_accounts.delete_account(account);
+        } catch (IOException | ClassNotFoundException ex) {
+        throw new RuntimeException(ex);
+        }
+        }
+        if (!relatedAccounts.isEmpty()) {
+        JOptionPane.showMessageDialog(frame, "Client and related accounts deleted successfully");
+        } else {
+        JOptionPane.showMessageDialog(frame, "Client deleted successfully");
+        }
+        } else {
+        JOptionPane.showMessageDialog(frame, "Deletion canceled");
+        }
+        } else {
+        JOptionPane.showMessageDialog(frame, "Client not found");
+        }
+        } else {
+        JOptionPane.showMessageDialog(frame, "Invalid Client ID. Deletion canceled");
+        }
+
+        }
+        });
+
+        customerDetailsButton.addActionListener(new ActionListener() {
+@Override
+public void actionPerformed(ActionEvent e) {
+        String cnic = JOptionPane.showInputDialog(frame, "Enter the CNIC Number:");
+
+
+        if (cnic != null && !cnic.isEmpty()) {
+        Client client = global_client.search_clients(cnic);
+
+        if (client != null) {
+        String clientDetails = "Client Name: " + client.na + "\n"
+        + "Client ID: " + client.client_ID + "\n"
+        + "Client Number: " + client.num + "\n"
+        + "Client CNIC: " + client.c_ID;
+        ArrayList<String> accountIDs = global_accounts.account_det(cnic);
+        if (!accountIDs.isEmpty()) {
+        StringBuilder accountDetails = new StringBuilder("Associated Account IDs:\n");
+        for (String accountID : accountIDs) {
+        accountDetails.append(accountID).append("\n");
+        }
+
+        JOptionPane.showMessageDialog(frame, clientDetails + "\n\n" + accountDetails, "Client Details", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+        JOptionPane.showMessageDialog(frame, clientDetails + "\n\nThe user has no account.", "Client Details", JOptionPane.INFORMATION_MESSAGE);
+        }
+        } else {
+        JOptionPane.showMessageDialog(frame, "Client not found.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        } else {
+        JOptionPane.showMessageDialog(frame, "Search canceled or invalid CNIC input.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+        }
+        });
+
+        returnBackButton.addActionListener(new ActionListener() {
+@Override
+public void actionPerformed(ActionEvent e) {
+        frame.dispose();
+        try {
+        createMainMenu();
+        } catch (IOException | ClassNotFoundException ex) {
+        throw new RuntimeException(ex);
+        }
+        }
+        });
+        container.add(allClientsButton);
+        container.add(allAccountsButton);
+        container.add(bankMoneyButton);
+        container.add(removeClientButton);
+        container.add(customerDetailsButton);
+        container.add(returnBackButton);
+        }
+
+}
+
